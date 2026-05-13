@@ -1,0 +1,6 @@
+cloudflare_api_token = "your-api-token-here"
+zone_id  = "your-zone-id"
+name     = "www"
+type     = "A"
+value    = "203.0.113.10"
+proxied  = true
