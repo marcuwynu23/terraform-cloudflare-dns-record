@@ -105,6 +105,38 @@ terraform destroy
 | `record_id` | The ID of the created DNS record   |
 | `hostname`  | The FQDN of the created DNS record |
 
+---
+
+## Usage as a Module
+
+Reference this repository as a Terraform module in your own configurations:
+
+```hcl
+module "dns_record" {
+  source = "github.com/marcuwynu23/terraform-cloudflare-dns-record?ref=main"
+
+  cloudflare_api_token = var.cloudflare_api_token
+  zone_id              = var.zone_id
+  name                 = "www"
+  type                 = "A"
+  value                = "203.0.113.10"
+  proxied              = true
+}
+```
+
+Then use the outputs in your configuration:
+
+```hcl
+# Example: reference the record ID in another resource
+output "record_fqdn" {
+  value = module.dns_record.hostname
+}
+```
+
+All variables and outputs documented below are available when using this as a module.
+
+---
+
 ## Examples
 
 ### A Record (proxied)
