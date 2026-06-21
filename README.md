@@ -105,8 +105,6 @@ terraform destroy
 | `record_id` | The ID of the created DNS record   |
 | `hostname`  | The FQDN of the created DNS record |
 
----
-
 ## Usage as a Module
 
 Reference this repository as a Terraform module in your own configurations:
@@ -134,8 +132,6 @@ output "record_fqdn" {
 ```
 
 All variables and outputs documented below are available when using this as a module.
-
----
 
 ## Examples
 
