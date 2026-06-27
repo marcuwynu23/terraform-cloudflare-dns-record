@@ -3,5 +3,5 @@ output "record_id" {
 }
 
 output "hostname" {
-  value = cloudflare_dns_record.new_record.hostname
+  value = cloudflare_dns_record.new_record.name
 }
