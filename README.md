@@ -109,18 +109,34 @@ terraform destroy
 
 Reference this repository as a Terraform module in your own configurations:
 
-```hcl
-module "dns_record" {
-  source = "github.com/marcuwynu23/terraform-cloudflare-dns-record?ref=main"
-
-  cloudflare_api_token = var.cloudflare_api_token
-  zone_id              = var.zone_id
-  name                 = "www"
-  type                 = "A"
-  value                = "203.0.113.10"
-  proxied              = true
-}
-```
+> **Option 1**: Terraform Registry (recommended)
+> ```hcl
+> module "dns-record" {
+>   source  = "marcuwynu23/dns-record/cloudflare"
+>   version = "1.0.0"
+>
+>   cloudflare_api_token = var.cloudflare_api_token
+>   zone_id              = var.zone_id
+>   name                 = "www"
+>   type                 = "A"
+>   value                = "203.0.113.10"
+>   proxied              = true
+> }
+> ```
+>
+> **Option 2**: GitHub source
+> ```hcl
+> module "dns-record" {
+>   source = "github.com/marcuwynu23/terraform-cloudflare-dns-record?ref=main"
+>
+>   cloudflare_api_token = var.cloudflare_api_token
+>   zone_id              = var.zone_id
+>   name                 = "www"
+>   type                 = "A"
+>   value                = "203.0.113.10"
+>   proxied              = true
+> }
+> ```
 
 Then use the outputs in your configuration:
 
