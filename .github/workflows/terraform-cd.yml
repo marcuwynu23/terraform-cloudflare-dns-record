@@ -1,0 +1,89 @@
+name: CD - DNS Record (Apply / Destroy)
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: Terraform operation
+        required: true
+        type: choice
+        options:
+          - apply
+          - destroy
+        default: apply
+      zone_id:
+        description: Cloudflare Zone ID
+        required: true
+        type: string
+      name:
+        description: DNS record name (use @ for root)
+        required: true
+        type: string
+        default: www
+      type:
+        description: Record type (A, AAAA, CNAME, MX, TXT, etc.)
+        required: true
+        type: string
+        default: A
+      value:
+        description: Record content / value
+        required: true
+        type: string
+        default: 203.0.113.10
+      proxied:
+        description: Proxy through Cloudflare (true/false)
+        required: false
+        type: boolean
+        default: true
+      ttl:
+        description: TTL in seconds (1 = auto)
+        required: false
+        type: number
+        default: 1
+      priority:
+        description: Priority for MX records
+        required: false
+        type: number
+        default: 0
+
+env:
+  TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+jobs:
+  provision:
+    name: Terraform ${{ github.event.inputs.command }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: latest
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: |
+          terraform plan ${{ github.event.inputs.command == 'destroy' && '-destroy' || '' }} \
+            -var="zone_id=${{ github.event.inputs.zone_id }}" \
+            -var="name=${{ github.event.inputs.name }}" \
+            -var="type=${{ github.event.inputs.type }}" \
+            -var="value=${{ github.event.inputs.value }}" \
+            -var="proxied=${{ github.event.inputs.proxied }}" \
+            -var="ttl=${{ github.event.inputs.ttl }}" \
+            -var="priority=${{ github.event.inputs.priority }}"
+
+      - name: Terraform Apply / Destroy
+        run: |
+          terraform ${{ github.event.inputs.command }} -auto-approve \
+            -var="zone_id=${{ github.event.inputs.zone_id }}" \
+            -var="name=${{ github.event.inputs.name }}" \
+            -var="type=${{ github.event.inputs.type }}" \
+            -var="value=${{ github.event.inputs.value }}" \
+            -var="proxied=${{ github.event.inputs.proxied }}" \
+            -var="ttl=${{ github.event.inputs.ttl }}" \
+            -var="priority=${{ github.event.inputs.priority }}"
