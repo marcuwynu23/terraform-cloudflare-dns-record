@@ -1,4 +1,4 @@
-resource "cloudflare_record" "new_record" {
+resource "cloudflare_dns_record" "new_record" {
   zone_id  = var.zone_id
   name     = var.name
   type     = var.type
